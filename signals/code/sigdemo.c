@@ -18,7 +18,7 @@ void handler_for_term(int signo) {
 }
 
 int main() {
-  printf("Welcome\n");// getpid());
+  printf("Welcome\n");// getpid());         ////used in embedded. 
   signal(SIGINT, handler_for_int);
   signal(SIGQUIT, handler_for_quit);
   signal(SIGTERM, handler_for_term);
