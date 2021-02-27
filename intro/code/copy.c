@@ -5,10 +5,10 @@
 #include<stdlib.h>
 #include<string.h>
 
-int main()
+int main(int argc, int* argv[])
 {  char buf[100];
 	int fd1,fd2,nbytes;
-	fd1=open("file1.txt",O_RDONLY);
+	fd1=open(argv[1],O_RDONLY);
 	if(fd1<0)
 	{
 		perror("open");
@@ -16,7 +16,7 @@ int main()
 	}
     else 
     {
-            fd2=open("file2.txt",O_WRONLY | O_CREAT , 0641);
+            fd2=open(argv[2],O_WRONLY | O_CREAT , 0641);
             if(fd2==-1)
             {
                 perror("DESTINATION FILE ERROR");

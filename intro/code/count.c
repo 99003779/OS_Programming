@@ -1,48 +1,94 @@
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <fcntl.h> 
-#include<errno.h> 
-#include<sys/wait.h> 
-#include <unistd.h> 
-int main(){ 
-  
-    // array of 2 size a[0] is for 
-    // reading and a[1] is for 
-    // writing over a pipe     
-    int a[2]; 
-  
-    // using pipe for inter 
-    // process communication 
-    pipe(a); 
-  
-    if(!fork()) 
-    { 
-        // closing normal stdout 
-        close(1); 
-          
-        // making stdout same as a[1] 
-        dup(a[1]); 
-          
-        // closing reading part of pipe 
-        // we don't need of it at this time 
-        close(a[0]); 
-          
-        // executing ls  
-        execlp("ls","ls",NULL); 
-    } 
-    else
-    { 
-        // closing normal stdin 
-        close(0); 
-          
-        // making stdin same as a[0] 
-        dup(a[0]); 
-          
-        // closing writing part in parent, 
-        // we don't need of it at this time 
-        close(a[1]); 
-          
-        // executing wc 
-        execlp("wc","wc",NULL); 
-    } 
-} 
+ #include<unistd.h>
+#include<fcntl.h>
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+ int main(int argc , char *argv[])
+{   char buf[100];
+    int nbytes;
+ int character_count = 0;
+           int word_count = 0;
+           int line_count = 0;
+
+           FILE *fp;
+
+           if(argc == 0)
+           {
+   printf("Please specify the filename as argument\n");
+                      exit(0);
+           }
+
+            if(fp != 0)
+           {
+                       printf("No such file or directory\n");
+                       exit(0);
+           }
+           //fp = fopen(argv[1],"r");
+           fp=open(argv[1],O_RDONLY);
+
+           //while((ch=fgetc(fp))!=EOF)
+             int maxlen=128;
+	        char buf[maxlen];
+           nbytes=read(fp,&buf,maxlen);
+           while(nbytes!= '\0')
+           {
+                       if(nbytes == ' ')
+                       {
+                             word_count++;
+                       }
+                       if(nbytes =='\n')
+                       {
+                            line_count++;
+                       }
+                       character_count++;
+           }
+           printf("character_count = %d\n",character_count);
+           printf("word_count = %d\n",word_count+1);
+           printf("line_count = %d\n",line_count);
+
+
+}
+//  int main(int argc , char *argv[])
+// {
+//  int character_count = 0;
+//            int space_count = 0;
+//            int word_count = 0;
+//            int line_count = 0;
+//            char ch;
+
+//            FILE *fp;
+
+//            if(argc == 0)
+//            {
+//    printf("Please specify the filename as argument\n");
+//                       exit(0);
+//            }
+
+//             if(fp != 0)
+//            {
+//                        printf("No such file or directory\n");
+//                        exit(0);
+//            }
+//            fp = fopen(argv[1],"r");
+
+//            while((ch=fgetc(fp))!=EOF)
+//            {
+//                        character_count++;
+//                        if(ch == ' ')
+//                        {
+//                              space_count++;
+//                              word_count++;
+//                        }
+//                        if(ch == '\n')
+//                        {
+// line_count++;
+//                        }
+//            }
+//            printf("character_count = %d\n",character_count);
+//            printf("space_count = %d\n",space_count);
+//            printf("word_count = %d\n",word_count+1);
+//            printf("line_count = %d\n",line_count);
+
+
+// }
